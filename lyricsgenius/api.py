@@ -185,8 +185,11 @@ class Genius(API):
             lyrics = re.sub('\n{2}', '\n', lyrics)  # Gaps between verses
             
         # Scrape song tags
-        tags_a = html.find_all('a', 'metadata_with_icon-link')
-        song_tags = [t.text.lower() for t in tags_a]
+        tags_meta = html.find_all('meta')
+        tags.re = re.compile("(?<=&quot;genres&quot;:\[).*?(?=])")
+        
+        parsed_tags = tag_re.findall(str(tags_meta))[0]
+        song_tags = re.sub('&quot;| Genius', '', parsed_tags).lower().split(",")
         return lyrics.strip("\n"), song_tags
 
     def _clean_str(self, s):
