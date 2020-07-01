@@ -11,7 +11,7 @@ from lyricsgenius.utils import sanitize_filename
 class Song(object):
     """A song from the Genius.com database."""
 
-    def __init__(self, json_dict, lyrics=''):
+    def __init__(self, json_dict, lyrics='', song_tags=[]):
         """ Song Constructor
 
         Properties:
@@ -26,6 +26,7 @@ class Song(object):
         """
         self._body = json_dict['song'] if 'song' in json_dict else json_dict
         self._body['lyrics'] = lyrics
+        self._body['song_tags'] = song_tags
         self._url = self._body['url']
         self._api_path = self._body['api_path']
         self._id = self._body['id']
@@ -43,6 +44,10 @@ class Song(object):
     @property
     def lyrics(self):
         return self._body.get('lyrics')
+    
+    @property
+    def song_tags(self):
+        return self._body.get('song_tags')
 
     @property
     def album(self):
