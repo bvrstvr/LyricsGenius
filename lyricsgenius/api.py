@@ -186,7 +186,7 @@ class Genius(API):
             
         # Scrape song tags
         tags_a = html.find_all('a', 'metadata_with_icon-link')
-        song_tags = [t.text.lower() for t in song_tags]
+        song_tags = [t.text.lower() for t in tags_a]
         return lyrics.strip("\n"), song_tags
 
     def _clean_str(self, s):
