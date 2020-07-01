@@ -186,9 +186,9 @@ class Genius(API):
             
         # Scrape song tags
         tags_meta = html.find_all('meta')
-        tags.re = re.compile("(?<=&quot;genres&quot;:\[).*?(?=])")
+        tags_re = re.compile("(?<=&quot;genres&quot;:\[).*?(?=])")
         
-        parsed_tags = tag_re.findall(str(tags_meta))[0]
+        parsed_tags = tags_re.findall(str(tags_meta))[0]
         song_tags = re.sub('&quot;| Genius', '', parsed_tags).lower().split(",")
         return lyrics.strip("\n"), song_tags
 
