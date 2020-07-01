@@ -183,7 +183,11 @@ class Genius(API):
         if self.remove_section_headers:  # Remove [Verse], [Bridge], etc.
             lyrics = re.sub('(\[.*?\])*', '', lyrics)
             lyrics = re.sub('\n{2}', '\n', lyrics)  # Gaps between verses
-        return lyrics.strip("\n")
+            
+        # Scrape song tags
+        tags_a = html.find_all('a', 'metadata_with_icon-link')
+        song_tags = [t.text.lower() for t in song_tags]
+        return lyrics.strip("\n"), song_tags
 
     def _clean_str(self, s):
         """ Returns a lowercase string with punctuation and bad chars removed
@@ -273,7 +277,7 @@ class Genius(API):
         song_info = result.copy()
         if get_full_info:
             song_info.update(self.get_song(result['id'])['song'])
-        lyrics = self._scrape_song_lyrics_from_url(song_info['url'])
+        lyrics, song_tags = self._scrape_song_lyrics_from_url(song_info['url'])
 
         # Skip results when URL is a 404 or lyrics are missing
         if not lyrics:
@@ -282,7 +286,7 @@ class Genius(API):
             return None
 
         # Return a Song object with lyrics if we've made it this far
-        song = Song(song_info, lyrics)
+        song = Song(song_info, lyrics, song_tags)
         if self.verbose:
             print('Done.')
         return song
